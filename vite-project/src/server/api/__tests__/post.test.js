@@ -1,11 +1,10 @@
-const app = require("../app");
+const app = require("../../app");
 const request = require("supertest");
-const prismaMock = require("../mocks/prismaMock");
+const prismaMock = require("../../mocks/prismaMock");
 const jwt = require("jsonwebtoken");
 const { beforeEach } = require("@jest/globals");
 
 jest.mock("jsonwebtoken");
-
 
 describe(" /api/posts", () => {
   beforeEach(() => {
@@ -123,13 +122,13 @@ describe(" /api/posts", () => {
       const responseCreate = await request(app)
         .post("/api/post")
         .set("Authorization", "Bearer fakeToken");
-      console.log(responseCreate.body);
+
       prismaMock.post.delete.mockResolvedValue(postToDelete);
       const response = await request(app)
         .delete("/api/post/1")
         .set("Authorization", "Bearer fakeToken");
       const { post } = response.body;
-      console.log(post);
+
       expect(response.status).toBe(200);
       expect(post.id).toEqual(postToDelete.id);
       expect(post.title).toEqual(postToDelete.title);

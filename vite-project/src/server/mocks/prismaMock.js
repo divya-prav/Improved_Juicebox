@@ -1,17 +1,12 @@
-const {mockDeep,mockReset} = require("jest-mock-extended");
-const prisma = require('../client.js');
-
-
-
-
+const { mockDeep, mockReset } = require("jest-mock-extended");
+const prisma = require("../client");
 
 const prismaMock = prisma;
 
-jest.mock('../client.js',()=> mockDeep())
+jest.mock("../client", () => mockDeep());
 
-
-beforeEach(()=>{
-    mockReset(prismaMock)
-})
+beforeEach(() => {
+  mockReset(prismaMock);
+});
 
 module.exports = prismaMock;

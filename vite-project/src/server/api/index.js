@@ -89,21 +89,21 @@ router.put("/post/:postId", async (req, res, next) => {
 router.delete("/post/:postId", async (req, res, next) => {
  
   try {
-    console.log(req.user.id)
+  
     const post = await prisma.post.delete({
       where: {
         id: Number(req.params.postId),
        
       },
     });
-     console.log(post)
+   
     if (!post) {
       return res.status(404).send("Post not found.");
     }
 
     res.send({post});
   } catch (error) {
-    console.log("i m in catch block")
+   
     next(error);
   }
 });

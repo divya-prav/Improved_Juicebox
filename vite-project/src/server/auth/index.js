@@ -4,8 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const bcrypt = require("bcrypt");
 
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require('../client')
 
 // GET /auth/me
 router.get("/me", async (req, res, next) => {
@@ -16,9 +15,9 @@ router.get("/me", async (req, res, next) => {
         id: req.user.id,
       },
     });
-    console.log("req----"+JSON.stringify(req.user));
+  
     delete user.password;
-    res.send(user);
+    res.send({user});
   } catch (e) {
     next(e);
   }
@@ -29,16 +28,23 @@ router.post("/register", async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
+    if (!username || !password) {
+      next({
+        name: "MissingCredentialsError",
+        message: "Please supply both a username and password",
+      });
+    }
     const hashedPassword = await bcrypt.hash(password, 8);
+ 
     const newUser = await prisma.user.create({
       data: {
         username: username,
         password: hashedPassword,
       },
     });
-
+    delete newUser.password;
     const token = jwt.sign({ id: newUser.id }, process.env.JWT);
-    res.status(201).send({ token });
+    res.status(201).send({ token ,newUser});
   } catch (e) {
     next(e);
   }
