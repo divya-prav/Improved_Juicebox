@@ -16,6 +16,7 @@ router.get("/me", async (req, res, next) => {
         id: req.user.id,
       },
     });
+    console.log("req----"+JSON.stringify(req.user));
     delete user.password;
     res.send(user);
   } catch (e) {
